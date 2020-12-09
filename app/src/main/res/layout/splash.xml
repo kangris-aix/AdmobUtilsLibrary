@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/chinta_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25sp"
+        android:background="#fffefe"
+        android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tv_AppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admob Demo"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:layout_below="@+id/iv_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"/>
+
+<ImageView
+    android:id="@+id/loadingImage"
+    android:layout_width="36dp"
+    android:layout_height="36dp"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="18dp"
+    android:layout_above="@+id/tv_loading_ad"
+    android:visibility="visible"/>
+
+
+    <TextView
+        android:id="@+id/tv_loading_ad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Loading ads"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/white"
+        android:textSize="8sp" />
+
+</RelativeLayout>

@@ -1,0 +1,4 @@
+include ':myAdmoblibrary'
+include ':admoblibrary'
+include ':app'
+rootProject.name = "AdmobExample"

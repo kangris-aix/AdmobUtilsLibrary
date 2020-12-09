@@ -1,0 +1,75 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.google.android.gms:play-services-ads:19.5.0'
+
+}
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            group "com.vapp.admoblibrary"
+            artifactId "AdmodUtils"
+            version "1.0.0"
+            // nó sẽ ra được như nè :  'com.nam.libraries:awesomelib:1.0.1'
+        }
+    }
+}
+bintray {
+    user = "namdh1212"
+    key =  "450efb21453efa9e48150b7e4311cded67b198b0"
+
+    configurations = ['archives']
+    pkg {
+        repo = 'AdmodUtils'  // đây là repo bạn tạo trên Bintray . nếu k có sẽ báo lỗi HTTP 404
+        name = 'AdmodUtils'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        publish = true
+        vcsUrl = 'https://github.com/Namdh1212/AdmodUtils.git'  // đây là repo  trên git bạn đã tạo ở bước trên
+        publicDownloadNumbers = true
+        version {
+            name = '0.1'
+            desc = 'Gradle Bintray Plugin 1.0 final'
+            vcsTag = '0.1'
+        }
+    }
+}
+
