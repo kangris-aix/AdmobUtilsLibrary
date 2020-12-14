@@ -1,6 +1,7 @@
 package com.vapp.admoblibrary;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,13 +10,16 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.appopen.AppOpenAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -39,6 +43,9 @@ public class AdmodUtils {
     public static String ads_admob_inter_id = "ca-app-pub-3940256099942544/1033173712";
     public static String ads_admob_banner_id = "ca-app-pub-3940256099942544/6300978111";
     public static String ads_admob_native_id = "ca-app-pub-3940256099942544/2247696110";
+    private AppOpenAd appOpenAd = null;
+    private AppOpenAd.AppOpenAdLoadCallback loadCallback;
+    private boolean isShowingAd = false;
 
     // get AdRequest
     public static AdRequest getAdRequest(){
@@ -76,6 +83,91 @@ public class AdmodUtils {
             return false;
         }
     }
+
+    public boolean isAdAvailable() {
+        return appOpenAd != null;
+    }
+    public void fetchAppOpenAds(Context context,Class nextActivity,String appOpenId) {
+        // Have unused ad, no need to fetch another.
+        if (isAdAvailable()) {
+            return;
+        }
+
+        loadCallback =
+                new AppOpenAd.AppOpenAdLoadCallback() {
+                    /**
+                     * Called when an app open ad has loaded.
+                     *
+                     * @param ad the loaded app open ad.
+                     */
+                    @Override
+                    public void onAppOpenAdLoaded(AppOpenAd ad) {
+                        appOpenAd = ad;
+                        showAdIfAvailable(context,nextActivity);
+                    }
+
+                    /**
+                     * Called when an app open ad has failed to load.
+                     *
+                     * @param loadAdError the error.
+                     */
+                    @Override
+                    public void onAppOpenAdFailedToLoad(LoadAdError loadAdError) {
+                        Intent i =  new Intent(context,nextActivity);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
+                    }
+
+                };
+        AdRequest request = AdmodUtils.getAdRequest();
+        AppOpenAd.load(
+                context.getApplicationContext(), appOpenId, request,
+                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
+    }
+
+    public void showAdIfAvailable(Context context,Class nextActivity) {
+        // Only show ad if there is not already an app open ad currently showing
+        // and an ad is available.
+        if (!isShowingAd && isAdAvailable()) {
+
+            FullScreenContentCallback fullScreenContentCallback =
+                    new FullScreenContentCallback() {
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            // Set the reference to null so isAdAvailable() returns false.
+                            appOpenAd = null;
+                            isShowingAd = false;
+
+                            Intent i =  new Intent(context,nextActivity);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(i);
+
+//                            fetchAd();
+                        }
+
+                        @Override
+                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            Intent i =  new Intent(context,nextActivity);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(i);
+                        }
+
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                            isShowingAd = true;
+                        }
+                    };
+
+            appOpenAd.show( (Activity) context, fullScreenContentCallback);
+
+        } else {
+            Intent i =  new Intent(context,nextActivity);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
+        }
+    }
+
+
 
     //load ads Banner
     public static void loadAdBanner(Context context, AdView adView, String s){
@@ -164,10 +256,7 @@ public class AdmodUtils {
     public static void loadAdInterstitial(Context context, String s){
         long currentTime = getCurrentTime();
         if (isFirstInterstitial){
-            MobileAds.initialize(context, new OnInitializationCompleteListener() {
-                @Override
-                public void onInitializationComplete(InitializationStatus initializationStatus) {
-                }
+            MobileAds.initialize(context, initializationStatus -> {
             });
             isFirstInterstitial = false;
         }
