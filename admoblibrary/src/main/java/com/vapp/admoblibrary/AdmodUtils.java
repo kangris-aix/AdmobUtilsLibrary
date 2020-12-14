@@ -275,7 +275,11 @@ public class AdmodUtils {
         Log.e(" Admod", "loadAdInterstitial");
     }
 
-
+    public static void showAdInterstitial(){
+        if(mInterstitialAd.isLoaded()){
+            mInterstitialAd.show();
+        }
+    }
 
 
     public static void showAdInterstitialAndStartNewActivity(final Context context, final Class activity){
