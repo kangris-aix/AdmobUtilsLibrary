@@ -43,9 +43,9 @@ public class AdmodUtils {
     public static String ads_admob_inter_id = "ca-app-pub-3940256099942544/1033173712";
     public static String ads_admob_banner_id = "ca-app-pub-3940256099942544/6300978111";
     public static String ads_admob_native_id = "ca-app-pub-3940256099942544/2247696110";
-    private AppOpenAd appOpenAd = null;
-    private AppOpenAd.AppOpenAdLoadCallback loadCallback;
-    private boolean isShowingAd = false;
+    private static AppOpenAd appOpenAd = null;
+    private static AppOpenAd.AppOpenAdLoadCallback loadCallback;
+    private static boolean isShowingAd = false;
 
     // get AdRequest
     public static AdRequest getAdRequest(){
@@ -84,10 +84,10 @@ public class AdmodUtils {
         }
     }
 
-    public boolean isAdAvailable() {
+    public static boolean isAdAvailable() {
         return appOpenAd != null;
     }
-    public void fetchAppOpenAds(Context context,Class nextActivity,String appOpenId) {
+    public static  void fetchAppOpenAds(Context context,Class nextActivity,String appOpenId) {
         // Have unused ad, no need to fetch another.
         if (isAdAvailable()) {
             return;
@@ -125,7 +125,7 @@ public class AdmodUtils {
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
     }
 
-    public void showAdIfAvailable(Context context,Class nextActivity) {
+    public static  void showAdIfAvailable(Context context,Class nextActivity) {
         // Only show ad if there is not already an app open ad currently showing
         // and an ad is available.
         if (!isShowingAd && isAdAvailable()) {
