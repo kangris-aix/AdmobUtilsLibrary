@@ -277,9 +277,49 @@ public class AdmodUtils {
     }
 
     public static void showAdInterstitial(){
-        if(mInterstitialAd.isLoaded()){
-            mInterstitialAd.show();
-        }
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                long currentTime = getCurrentTime();
+                if (currentTime - lastTimeShowInterstitial >= limitTime) {
+                    lastTimeShowInterstitial = currentTime;
+                    mInterstitialAd.show();
+                }
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                Log.e(" Admod", "showAdInterstitial");
+                Log.e(" Admod","errorCodeAds:" +adError.getMessage());
+                Log.e(" Admod","errorCodeAds:" +adError.getCause());
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed
+            }
+            @Override
+            public void onAdClicked() {
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+            @Override
+            public void onAdClosed() {
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+        });
+        Log.e(" Admod", "showAdInterstitial");
     }
 
 
