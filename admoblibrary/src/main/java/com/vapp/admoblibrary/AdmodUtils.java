@@ -262,6 +262,7 @@ public class AdmodUtils {
         }
         else if(currentTime-lastTimeShowInterstitial >= limitTime) {
             lastTimeShowInterstitial = currentTime;
+            dialog = new ProgressDialog(context,R.style.AppCompatAlertDialogStyle);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setTitle("Loading");
             dialog.setMessage("Loading ads. Please wait...");
