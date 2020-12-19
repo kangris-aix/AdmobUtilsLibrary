@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -426,7 +427,7 @@ public class AdmodUtils {
         });
         Log.e(" Admod", "showAdInterstitial");
     }
-    public static void showAdInterstitialAndAddNewFragment(FragmentActivity context, Fragment fragment,int contentFrame, boolean addToBackStack){
+    public static void showAdInterstitialAndAddNewFragment(AppCompatActivity context, Fragment fragment,int contentFrame, boolean addToBackStack){
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
@@ -488,7 +489,7 @@ public class AdmodUtils {
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
-    public static void addFragment(FragmentActivity context, Fragment fragment, int contentFrame, boolean addToBackStack) {
+    public static void addFragment(AppCompatActivity context, Fragment fragment, int contentFrame, boolean addToBackStack) {
         FragmentTransaction transaction = context.getSupportFragmentManager()
                 .beginTransaction();
         if (addToBackStack) {
