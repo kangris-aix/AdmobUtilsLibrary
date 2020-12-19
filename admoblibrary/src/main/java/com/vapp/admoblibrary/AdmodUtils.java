@@ -10,6 +10,10 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
@@ -275,7 +279,6 @@ public class AdmodUtils {
         mInterstitialAd.loadAd(getAdRequest());
         Log.e(" Admod", "loadAdInterstitial");
     }
-
     public static void showAdInterstitial(){
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
@@ -321,8 +324,6 @@ public class AdmodUtils {
         });
         Log.e(" Admod", "showAdInterstitial");
     }
-
-
     public static void showAdInterstitialAndStartNewActivity(final Context context, final Class activity){
 
      mInterstitialAd.setAdListener(new AdListener() {
@@ -373,7 +374,6 @@ public class AdmodUtils {
         });
         Log.e(" Admod", "showAdInterstitial");
     }
-
     public static void showAdInterstitialAndAddNewActivity(final Context context, final Class activity){
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
@@ -426,6 +426,59 @@ public class AdmodUtils {
         });
         Log.e(" Admod", "showAdInterstitial");
     }
+    public static void showAdInterstitialAndAddNewFragment(FragmentActivity context, Fragment fragment,int contentFrame, boolean addToBackStack){
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                long currentTime = getCurrentTime();
+                if (currentTime - lastTimeShowInterstitial >= limitTime) {
+                    lastTimeShowInterstitial = currentTime;
+                    mInterstitialAd.show();
+                } else {
+                    addFragment(context, fragment,contentFrame,addToBackStack);
+                }
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                Log.e(" Admod", "showAdInterstitial");
+                Log.e(" Admod","errorCodeAds:" +adError.getMessage());
+                Log.e(" Admod","errorCodeAds:" +adError.getCause());
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+                addFragment(context, fragment,contentFrame,addToBackStack);
+            }
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed
+            }
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                //Toast.makeText(ActivitySplash.this, "666666", Toast.LENGTH_SHORT).show();
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+            @Override
+            public void onAdClosed() {
+
+                addFragment(context, fragment,contentFrame,addToBackStack);
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+        });
+        Log.e(" Admod", "showAdInterstitial");
+    }
+
     private static void addNewActivity(Context context, Class activity){
         Intent i =  new Intent(context,activity);
         context.startActivity(i);
@@ -435,10 +488,24 @@ public class AdmodUtils {
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
+    public static void addFragment(FragmentActivity context, Fragment fragment, int contentFrame, boolean addToBackStack) {
+        FragmentTransaction transaction = context.getSupportFragmentManager()
+                .beginTransaction();
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        } else {
+            transaction.addToBackStack(fragment.toString());
+        }
+        if (fragment.getTag() == null) {
+            transaction.replace(contentFrame, fragment, fragment.toString());
+        } else {
+            transaction.replace(contentFrame, fragment, fragment.getTag());
+        }
+        transaction.commit();
+    }
     private static long getCurrentTime() {
         return System.currentTimeMillis();
     }
-
     public static void getDeviceID(Context context){
         String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         String deviceId = md5(android_id).toUpperCase();
