@@ -265,7 +265,7 @@ public class AdmodUtils {
             });
             isFirstInterstitial = false;
         }
-        else if(currentTime-lastTimeShowInterstitial >= limitTime) {
+        if(currentTime-lastTimeShowInterstitial >= limitTime) {
             lastTimeShowInterstitial = currentTime;
             dialog = new ProgressDialog(context,R.style.AppCompatAlertDialogStyle);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
