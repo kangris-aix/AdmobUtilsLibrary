@@ -39,7 +39,7 @@ import java.security.NoSuchAlgorithmException;
 public class AdmodUtils {
     static ProgressDialog dialog;
     public static boolean isTesting = true;
-    public static boolean isFirstInterstitial = true;
+    public static boolean isInitializationComplete = false;
     public static long limitTime = 30000;
     public static long lastTimeShowInterstitial = 0;
 
@@ -95,6 +95,7 @@ public class AdmodUtils {
     public static  void fetchAppOpenAds(Context context,Class nextActivity,String appOpenId) {
         // Have unused ad, no need to fetch another.
         MobileAds.initialize(context, initializationStatus -> {
+            isInitializationComplete = true;
         });
         if (isAdAvailable()) {
             return;
@@ -178,11 +179,7 @@ public class AdmodUtils {
 
     //load ads Banner
     public static void loadAdBanner(Context context, AdView adView, String s){
-        MobileAds.initialize(context, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
+        MobileAds.initialize(context, initializationStatus -> isInitializationComplete = true);
 //        if (isTesting){
 //            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
 //        }else {
@@ -262,10 +259,10 @@ public class AdmodUtils {
     public static InterstitialAd mInterstitialAd;
     public static void loadAdInterstitial(Context context, String s){
         long currentTime = getCurrentTime();
-        if (isFirstInterstitial){
+        if (!isInitializationComplete){
             MobileAds.initialize(context, initializationStatus -> {
+                isInitializationComplete = true;
             });
-            isFirstInterstitial = false;
         }
         if(currentTime-lastTimeShowInterstitial >= limitTime) {
             dialog = new ProgressDialog(context,R.style.AppCompatAlertDialogStyle);
