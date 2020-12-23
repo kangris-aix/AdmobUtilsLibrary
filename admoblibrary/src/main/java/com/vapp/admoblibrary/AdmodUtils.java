@@ -428,7 +428,7 @@ public class AdmodUtils {
         });
         Log.e(" Admod", "showAdInterstitial");
     }
-    public static void showAdInterstitialAndReplaceNewFragment(AppCompatActivity context, Fragment fragment,int contentFrame, boolean addToBackStack){
+    public static void showAdInterstitialAndReplaceNewFragment(FragmentManager fm, Fragment fragment,int contentFrame, boolean addToBackStack){
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
@@ -437,7 +437,7 @@ public class AdmodUtils {
                     lastTimeShowInterstitial = currentTime;
                     mInterstitialAd.show();
                 } else {
-                    addFragment(context, fragment,contentFrame,addToBackStack);
+                    replaceFragment(fm, fragment,contentFrame,addToBackStack);
                 }
                 if (dialog != null) {
                     dialog.dismiss();
@@ -451,7 +451,7 @@ public class AdmodUtils {
                 if(dialog!=null){
                     dialog.dismiss();
                 }
-                addFragment(context, fragment,contentFrame,addToBackStack);
+                replaceFragment(fm, fragment,contentFrame,addToBackStack);
             }
             @Override
             public void onAdOpened() {
@@ -472,7 +472,7 @@ public class AdmodUtils {
             @Override
             public void onAdClosed() {
 
-                addFragment(context, fragment,contentFrame,addToBackStack);
+                replaceFragment(fm, fragment,contentFrame,addToBackStack);
                 if(dialog!=null){
                     dialog.dismiss();
                 }
