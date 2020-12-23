@@ -13,6 +13,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.ads.AdError;
@@ -427,6 +428,58 @@ public class AdmodUtils {
         });
         Log.e(" Admod", "showAdInterstitial");
     }
+    public static void showAdInterstitialAndReplaceNewFragment(AppCompatActivity context, Fragment fragment,int contentFrame, boolean addToBackStack){
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                long currentTime = getCurrentTime();
+                if (currentTime - lastTimeShowInterstitial >= limitTime) {
+                    lastTimeShowInterstitial = currentTime;
+                    mInterstitialAd.show();
+                } else {
+                    addFragment(context, fragment,contentFrame,addToBackStack);
+                }
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                Log.e(" Admod", "showAdInterstitial");
+                Log.e(" Admod","errorCodeAds:" +adError.getMessage());
+                Log.e(" Admod","errorCodeAds:" +adError.getCause());
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+                addFragment(context, fragment,contentFrame,addToBackStack);
+            }
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed
+            }
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                //Toast.makeText(ActivitySplash.this, "666666", Toast.LENGTH_SHORT).show();
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+            @Override
+            public void onAdClosed() {
+
+                addFragment(context, fragment,contentFrame,addToBackStack);
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+        });
+        Log.e(" Admod", "showAdInterstitial");
+    }
     public static void showAdInterstitialAndAddNewFragment(AppCompatActivity context, Fragment fragment,int contentFrame, boolean addToBackStack){
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
@@ -492,6 +545,20 @@ public class AdmodUtils {
     public static void addFragment(AppCompatActivity context, Fragment fragment, int contentFrame, boolean addToBackStack) {
         FragmentTransaction transaction = context.getSupportFragmentManager()
                 .beginTransaction();
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        } else {
+            transaction.addToBackStack(fragment.toString());
+        }
+        if (fragment.getTag() == null) {
+            transaction.replace(contentFrame, fragment, fragment.toString());
+        } else {
+            transaction.replace(contentFrame, fragment, fragment.getTag());
+        }
+        transaction.commit();
+    }
+    public static void replaceFragment(FragmentManager fm, Fragment fragment, int contentFrame, boolean addToBackStack) {
+        FragmentTransaction transaction = fm.beginTransaction();
         if (addToBackStack) {
             transaction.addToBackStack(null);
         } else {
