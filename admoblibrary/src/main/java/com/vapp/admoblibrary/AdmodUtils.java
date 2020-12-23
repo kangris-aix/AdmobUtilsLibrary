@@ -12,7 +12,6 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -427,6 +426,55 @@ public class AdmodUtils {
             }
         });
         Log.e(" Admod", "showAdInterstitial");
+    }
+    public static void showAdInterstitialWithCallback(AdCallback adCallback){
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                long currentTime = getCurrentTime();
+                if (currentTime - lastTimeShowInterstitial >= limitTime) {
+                    lastTimeShowInterstitial = currentTime;
+                    mInterstitialAd.show();
+                }
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                Log.e(" Admod", "showAdInterstitial");
+                Log.e(" Admod","errorCodeAds:" +adError.getMessage());
+                Log.e(" Admod","errorCodeAds:" +adError.getCause());
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+                adCallback.onAdClosed();
+            }
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed
+            }
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                //Toast.makeText(ActivitySplash.this, "666666", Toast.LENGTH_SHORT).show();
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+            @Override
+            public void onAdClosed() {
+
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+                adCallback.onAdClosed();
+            }
+        });
     }
     public static void showAdInterstitialAndReplaceNewFragment(FragmentManager fm, Fragment fragment,int contentFrame, boolean addToBackStack){
         mInterstitialAd.setAdListener(new AdListener() {
