@@ -94,6 +94,8 @@ public class AdmodUtils {
     }
     public static  void fetchAppOpenAds(Context context,Class nextActivity,String appOpenId) {
         // Have unused ad, no need to fetch another.
+        MobileAds.initialize(context, initializationStatus -> {
+        });
         if (isAdAvailable()) {
             return;
         }
