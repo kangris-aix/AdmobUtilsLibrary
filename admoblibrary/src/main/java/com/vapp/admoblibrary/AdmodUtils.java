@@ -272,7 +272,7 @@ public class AdmodUtils {
         mInterstitialAd.loadAd(getAdRequest());
         Log.e(" Admod", "loadAdInterstitial");
     }
-    public static void loadAndShowInterstitial(Context context,String admobId, Class destActivity) {
+    public static void loadAndShowInterstitialAddNewActivity(Context context, String admobId, Class destActivity) {
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {
             dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
@@ -290,13 +290,9 @@ public class AdmodUtils {
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                long currentTime = getCurrentTime();
-                if (currentTime - lastTimeShowInterstitial >= limitTime) {
-                    lastTimeShowInterstitial = currentTime;
+                lastTimeShowInterstitial = currentTime;
                     mInterstitialAd.show();
-                } else {
-                    startNewActivity(context, destActivity);
-                }
+                    addNewActivity(context, destActivity);
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -310,7 +306,7 @@ public class AdmodUtils {
                 if (dialog != null) {
                     dialog.dismiss();
                 }
-                startNewActivity(context, destActivity);
+                addNewActivity(context, destActivity);
             }
 
             @Override
@@ -332,7 +328,7 @@ public class AdmodUtils {
 
             @Override
             public void onAdClosed() {
-                startNewActivity(context, destActivity);
+                addNewActivity(context, destActivity);
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -341,7 +337,7 @@ public class AdmodUtils {
         Log.e(" Admod", "showAdInterstitial");
     }
         else{
-            startNewActivity(context, destActivity);
+            addNewActivity(context, destActivity);
         }
     }
     public static void showAdInterstitial(){
