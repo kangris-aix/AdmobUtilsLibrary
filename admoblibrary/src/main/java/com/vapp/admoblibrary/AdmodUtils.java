@@ -292,7 +292,6 @@ public class AdmodUtils {
             public void onAdLoaded() {
                 lastTimeShowInterstitial = currentTime;
                     mInterstitialAd.show();
-                    addNewActivity(context, destActivity);
                 if (dialog != null) {
                     dialog.dismiss();
                 }
