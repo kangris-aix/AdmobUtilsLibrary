@@ -258,8 +258,6 @@ public class AdmodUtils {
     public static InterstitialAd mInterstitialAd;
     public static void loadAdInterstitial(Context context, String s){
         long currentTime = getCurrentTime();
-        MobileAds.initialize(context, initializationStatus -> {
-        });
         if(currentTime-lastTimeShowInterstitial >= limitTime) {
             dialog = new ProgressDialog(context,R.style.AppCompatAlertDialogStyle);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
