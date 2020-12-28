@@ -272,6 +272,70 @@ public class AdmodUtils {
         mInterstitialAd.loadAd(getAdRequest());
         Log.e(" Admod", "loadAdInterstitial");
     }
+    public static void loadAndShowInterstitial(Context context,String admobId, Class destActivity){
+        long currentTime = getCurrentTime();
+        if(currentTime-lastTimeShowInterstitial >= limitTime) {
+            dialog = new ProgressDialog(context,R.style.AppCompatAlertDialogStyle);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setTitle("Loading");
+            dialog.setMessage("Loading ads. Please wait...");
+            dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+        mInterstitialAd  = new InterstitialAd(context);
+        mInterstitialAd.setAdUnitId(admobId);
+        mInterstitialAd.loadAd(getAdRequest());
+        Log.e(" Admod", "loadAdInterstitial");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                long currentTime = getCurrentTime();
+                if (currentTime - lastTimeShowInterstitial >= limitTime) {
+                    lastTimeShowInterstitial = currentTime;
+                    mInterstitialAd.show();
+                } else {
+                    startNewActivity(context, destActivity);
+                }
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                Log.e(" Admod", "showAdInterstitial");
+                Log.e(" Admod","errorCodeAds:" +adError.getMessage());
+                Log.e(" Admod","errorCodeAds:" +adError.getCause());
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+                startNewActivity(context,destActivity);
+            }
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed
+            }
+            @Override
+            public void onAdClicked() {
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+            @Override
+            public void onAdClosed() {
+                startNewActivity(context, destActivity);
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+            }
+        });
+        Log.e(" Admod", "showAdInterstitial");
+    }
     public static void showAdInterstitial(){
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
