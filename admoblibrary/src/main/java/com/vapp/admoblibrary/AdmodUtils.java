@@ -486,6 +486,75 @@ public class AdmodUtils {
         });
         Log.e(" Admod", "showAdInterstitial");
     }
+    public static void loadAndShowAdInterstitialWithCallback(Context context, String admobId, AdCallback adCallback, boolean enableLoadingDialog){
+        long currentTime = getCurrentTime();
+        if (currentTime - lastTimeShowInterstitial >= limitTime) {
+            if(enableLoadingDialog){
+                dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
+                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                dialog.setTitle("Loading");
+                dialog.setMessage("Loading ads. Please wait...");
+                dialog.setIndeterminate(true);
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+            }
+            mInterstitialAd = new InterstitialAd(context);
+            mInterstitialAd.setAdUnitId(admobId);
+            mInterstitialAd.loadAd(getAdRequest());
+            Log.e(" Admod", "loadAdInterstitial");
+
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    lastTimeShowInterstitial = currentTime;
+                    mInterstitialAd.show();
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void onAdFailedToLoad(LoadAdError adError) {
+                    Log.e(" Admod", "showAdInterstitial");
+                    Log.e(" Admod", "errorCodeAds:" + adError.getMessage());
+                    Log.e(" Admod", "errorCodeAds:" + adError.getCause());
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    adCallback.onAdClosed();
+                }
+
+                @Override
+                public void onAdOpened() {
+                    // Code to be executed when the ad is displayed
+                }
+
+                @Override
+                public void onAdClicked() {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void onAdLeftApplication() {
+                    // Code to be executed when the user has left the app.
+                }
+
+                @Override
+                public void onAdClosed() {
+                    adCallback.onAdClosed();
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+            Log.e(" Admod", "showAdInterstitial");
+        }
+        else{
+            adCallback.onAdClosed();
+        }
+    }
     public static void showAdInterstitialWithCallback(AdCallback adCallback){
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {
@@ -684,6 +753,7 @@ public class AdmodUtils {
         }
         transaction.commit();
     }
+
     private static long getCurrentTime() {
         return System.currentTimeMillis();
     }
@@ -770,4 +840,5 @@ public class AdmodUtils {
     private static void addNewActivityWithIntent(Context context, Intent intent) {
         context.startActivity(intent);
     }
+
 }
