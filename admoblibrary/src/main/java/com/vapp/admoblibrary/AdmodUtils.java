@@ -486,9 +486,9 @@ public class AdmodUtils {
         });
         Log.e(" Admod", "showAdInterstitial");
     }
-    public static void loadAndShowAdInterstitialWithCallback(Context context, String admobId, AdCallback adCallback, boolean enableLoadingDialog){
+    public static void loadAndShowAdInterstitialWithCallback(Context context, String admobId,boolean isShow, AdCallback adCallback, boolean enableLoadingDialog){
         long currentTime = getCurrentTime();
-        if (currentTime - lastTimeShowInterstitial >= limitTime) {
+        if (currentTime - lastTimeShowInterstitial >= limitTime && isShow) {
             if(enableLoadingDialog){
                 dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
                 dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
