@@ -489,7 +489,7 @@ public class AdmodUtils {
     }
     public static void loadAndShowAdInterstitialWithCallback(Context context, String admobId,boolean isShow, AdCallback adCallback, boolean enableLoadingDialog){
         long currentTime = getCurrentTime();
-        if (currentTime - lastTimeShowInterstitial >= limitTime && isShow) {
+        if (currentTime - lastTimeShowInterstitial >= limitTime && isShow && isNetworkConnected(context)) {
             if(enableLoadingDialog){
                 dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
                 dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
