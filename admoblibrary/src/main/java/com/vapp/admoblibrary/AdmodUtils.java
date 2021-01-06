@@ -274,6 +274,9 @@ public class AdmodUtils {
         Log.e(" Admod", "loadAdInterstitial");
     }
     public static void loadAndShowInterstitialAddNewActivity(Context context, String admobId, Class destActivity) {
+        if(!isInitializationComplete){
+            MobileAds.initialize(context, initializationStatus -> isInitializationComplete = true);
+        }
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {
             dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
