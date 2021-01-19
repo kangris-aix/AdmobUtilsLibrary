@@ -12,8 +12,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AdmodUtils.loadAdInterstitial(SplashActivity.this, AdmodUtils.ads_admob_inter_id);
-        AdmodUtils.showAdInterstitialAndStartNewActivity(SplashActivity.this, MainActivity.class);
-        AdmodUtils.limitTime = 500000;
+        AdmodUtils.fetchAppOpenAds(this,MainActivity.class,"ca-app-pub-3940256099942544/3419835294");
+        AdmodUtils.limitTime = 300000;
     }
 }

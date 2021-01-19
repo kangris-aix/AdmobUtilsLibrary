@@ -5,6 +5,8 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.vapp.admobexample.R;
+import com.vapp.admobexample.SplashActivity;
+import com.vapp.admoblibrary.AdmodUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,8 +26,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                AdmodUtils.loadAndShowAdRewardAndStartNewActivity(MainActivity.this, SplashActivity.class,"ca-app-pub-3940256099942544/5224354917");
             }
         });
     }

@@ -9,7 +9,9 @@ import android.net.ConnectivityManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -29,6 +31,10 @@ import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.vapp.admoblibrary.nativetemplate.NativeTemplateStyle;
 import com.vapp.admoblibrary.nativetemplate.TemplateView;
 
@@ -254,6 +260,63 @@ public class AdmodUtils {
                         // used here to specify individual options settings.
                         .build())
                 .build();
+    }
+
+    //reward
+
+    static RewardedAd rewardedAd;
+    public static void loadAndShowAdRewardAndStartNewActivity(Activity activity, Class destActivity, String id){
+        rewardedAd = new RewardedAd(activity, id);
+
+        dialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("Loading");
+        dialog.setMessage("Loading ads. Please wait...");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                dialog.dismiss();
+
+                RewardedAdCallback adCallback = new RewardedAdCallback() {
+                    @Override
+                    public void onRewardedAdOpened() {
+                        // Ad opened.
+                    }
+
+                    @Override
+                    public void onRewardedAdClosed() {
+                        Toast.makeText(activity,"AdClosed",Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onUserEarnedReward(@NonNull RewardItem reward) {
+                        startNewActivity(activity,destActivity);
+
+                    }
+
+                    @Override
+                    public void onRewardedAdFailedToShow(AdError adError) {
+                        Toast.makeText(activity,"FailedToShow",Toast.LENGTH_SHORT).show();
+
+                    }
+                };
+                rewardedAd.show(activity, adCallback);
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                Toast.makeText(activity,"FailedToLoad",Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
     }
 
     //inter ads
