@@ -319,7 +319,59 @@ public class AdmodUtils {
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
     }
+    public static void loadAndShowAdRewardAndAddActivity(Activity activity, Class destActivity, String id){
+        rewardedAd = new RewardedAd(activity, id);
 
+        dialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("Loading");
+        dialog.setMessage("Loading ads. Please wait...");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                dialog.dismiss();
+
+                RewardedAdCallback adCallback = new RewardedAdCallback() {
+                    @Override
+                    public void onRewardedAdOpened() {
+                        // Ad opened.
+                    }
+
+                    @Override
+                    public void onRewardedAdClosed() {
+                        Toast.makeText(activity,"AdClosed",Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onUserEarnedReward(@NonNull RewardItem reward) {
+                        addNewActivity(activity,destActivity);
+
+                    }
+
+                    @Override
+                    public void onRewardedAdFailedToShow(AdError adError) {
+                        Toast.makeText(activity,"FailedToShow",Toast.LENGTH_SHORT).show();
+
+                    }
+                };
+                rewardedAd.show(activity, adCallback);
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                Toast.makeText(activity,"FailedToLoad",Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+    }
     //inter ads
     public static InterstitialAd mInterstitialAd;
     public static void loadAdInterstitial(Context context, String s){
