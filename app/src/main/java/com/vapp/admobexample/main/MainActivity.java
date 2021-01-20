@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.loadAndShowAdRewardAndStartNewActivity(MainActivity.this, SplashActivity.class,"ca-app-pub-3940256099942544/5224354917");
+                AdmodUtils.loadAndShowAdRewardAndAddActivity(MainActivity.this, Second2Fragment.class,"ca-app-pub-3940256099942544/5224354917");
             }
         });
     }

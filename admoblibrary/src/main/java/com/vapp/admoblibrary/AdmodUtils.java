@@ -264,11 +264,12 @@ public class AdmodUtils {
     }
 
     //reward
-
+    static boolean isReward = false;
     static RewardedAd rewardedAd;
+
     public static void loadAndShowAdRewardAndStartNewActivity(Activity activity, Class destActivity, String id){
         rewardedAd = new RewardedAd(activity, id);
-
+        isReward = false;
         dialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setTitle("Loading");
@@ -291,13 +292,14 @@ public class AdmodUtils {
 
                     @Override
                     public void onRewardedAdClosed() {
-                        Toast.makeText(activity,"AdClosed",Toast.LENGTH_SHORT).show();
-
+                        if (isReward){
+                            addNewActivity(activity,destActivity);
+                        }
                     }
 
                     @Override
                     public void onUserEarnedReward(@NonNull RewardItem reward) {
-                        startNewActivity(activity,destActivity);
+                        isReward = true;
 
                     }
 
@@ -319,9 +321,10 @@ public class AdmodUtils {
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
     }
+
     public static void loadAndShowAdRewardAndAddActivity(Activity activity, Class destActivity, String id){
         rewardedAd = new RewardedAd(activity, id);
-
+         isReward = false;
         dialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setTitle("Loading");
@@ -339,18 +342,21 @@ public class AdmodUtils {
                 RewardedAdCallback adCallback = new RewardedAdCallback() {
                     @Override
                     public void onRewardedAdOpened() {
-                        // Ad opened.
+                        Toast.makeText(activity,"Opened",Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override
                     public void onRewardedAdClosed() {
-                        Toast.makeText(activity,"AdClosed",Toast.LENGTH_SHORT).show();
-
+                        if (isReward){
+                            addNewActivity(activity,destActivity);
+                        }
                     }
 
                     @Override
                     public void onUserEarnedReward(@NonNull RewardItem reward) {
-                        addNewActivity(activity,destActivity);
+                        Toast.makeText(activity,"EarnedReward",Toast.LENGTH_SHORT).show();
+                        isReward = true;
 
                     }
 
