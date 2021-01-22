@@ -98,16 +98,10 @@ public class AdmodUtils {
         }
     }
 
-    public static boolean isAdAvailable() {
-        return appOpenAd != null;
-    }
     public static  void fetchAppOpenAds(Context context,Class nextActivity,String appOpenId) {
         // Have unused ad, no need to fetch another.
         MobileAds.initialize(context, initializationStatus -> {
         });
-        if (isAdAvailable()) {
-            return;
-        }
 
         loadCallback =
                 new AppOpenAd.AppOpenAdLoadCallback() {
@@ -144,7 +138,7 @@ public class AdmodUtils {
     public static  void showAdIfAvailable(Context context,Class nextActivity) {
         // Only show ad if there is not already an app open ad currently showing
         // and an ad is available.
-        if (!isShowingAd && isAdAvailable()) {
+        if (!isShowingAd ) {
 
             FullScreenContentCallback fullScreenContentCallback =
                     new FullScreenContentCallback() {
