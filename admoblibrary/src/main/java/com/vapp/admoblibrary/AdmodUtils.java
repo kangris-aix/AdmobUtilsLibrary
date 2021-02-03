@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.InterstitialAd;
@@ -190,6 +192,16 @@ public class AdmodUtils {
 //        }
 //        adView.setAdUnitId(s);
         adView.loadAd(getAdRequest());
+        Log.e(" Admod", "loadAdBanner");
+    }
+    public static void loadAdBanner(Context context, ViewGroup viewGroup, String bannerId){
+        MobileAds.initialize(context, initializationStatus -> isInitializationComplete = true);
+        AdView mAdView = new AdView(context);
+        mAdView.setAdUnitId(bannerId);
+        mAdView.setAdSize(AdSize.SMART_BANNER);
+        viewGroup.removeAllViews();
+        viewGroup.addView(mAdView);
+        mAdView.loadAd(AdmodUtils.getAdRequest());
         Log.e(" Admod", "loadAdBanner");
     }
 
