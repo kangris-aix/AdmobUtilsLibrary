@@ -61,6 +61,7 @@ public class AdmodUtils {
     // get AdRequest
     public static AdRequest getAdRequest(){
         AdRequest adRequest =  new AdRequest.Builder()
+                .setHttpTimeoutMillis(5000)
                 .addTestDevice("3C94990AA9A387A256D3B2BBBFEA51EA")
                 .addTestDevice("6F599887BC401CFB1C7087F15D7C0834")
                 .addTestDevice("B543DCF2C7591C7FB8B52A3A1E7138F6")
