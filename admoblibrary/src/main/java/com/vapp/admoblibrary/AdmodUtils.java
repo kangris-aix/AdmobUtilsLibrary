@@ -134,7 +134,7 @@ public class AdmodUtils {
                 };
         AdRequest request = AdmodUtils.getAdRequest();
         AppOpenAd.load(
-                context.getApplicationContext(), appOpenId, request,
+                context, appOpenId, request,
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
     }
 
