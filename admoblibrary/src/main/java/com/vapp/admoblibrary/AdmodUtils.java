@@ -79,6 +79,7 @@ public class AdmodUtils {
                 .addTestDevice("A5CB09DBBE486E3421502DFF53070339")
                 .addTestDevice("5798E06F645D797640A9C4B90B6CBEA7")
                 .addTestDevice("E91FD94E971864C3880FB434D1C39A03")
+                .addTestDevice("50ACF2DAA0884FF8B08F7C823E046DEA")
                 .build();
         return adRequest;
     }
