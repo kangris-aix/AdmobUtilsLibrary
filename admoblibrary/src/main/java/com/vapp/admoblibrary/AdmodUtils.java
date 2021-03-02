@@ -137,7 +137,7 @@ public class AdmodUtils {
                 context, appOpenId, request,
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
     }
-    public static  void fetchAppOpenAdsWithCallback(Context context,Class nextActivity,String appOpenId,AdCallback adCallback) {
+    public static  void fetchAppOpenAdsWithCallback(Context context,String appOpenId,AdCallback adCallback) {
         // Have unused ad, no need to fetch another.
         MobileAds.initialize(context, initializationStatus -> {
         });
