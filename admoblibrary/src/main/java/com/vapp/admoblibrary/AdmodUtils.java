@@ -162,9 +162,7 @@ public class AdmodUtils {
                      */
                     @Override
                     public void onAppOpenAdFailedToLoad(LoadAdError loadAdError) {
-                        Intent i =  new Intent(context,nextActivity);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(i);
+                        adCallback.onAdClosed();
                     }
 
                 };
