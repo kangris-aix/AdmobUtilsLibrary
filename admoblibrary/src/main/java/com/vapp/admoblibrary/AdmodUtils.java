@@ -137,77 +137,7 @@ public class AdmodUtils {
                 context, appOpenId, request,
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
     }
-    public static  void fetchAppOpenAdsWithCallback(Context context,String appOpenId,AdCallback adCallback) {
-        // Have unused ad, no need to fetch another.
-        MobileAds.initialize(context, initializationStatus -> {
-        });
 
-        loadCallback =
-                new AppOpenAd.AppOpenAdLoadCallback() {
-                    /**
-                     * Called when an app open ad has loaded.
-                     *
-                     * @param ad the loaded app open ad.
-                     */
-                    @Override
-                    public void onAppOpenAdLoaded(AppOpenAd ad) {
-                        appOpenAd = ad;
-                        showAppOpenAd(context,adCallback);
-                    }
-
-                    /**
-                     * Called when an app open ad has failed to load.
-                     *
-                     * @param loadAdError the error.
-                     */
-                    @Override
-                    public void onAppOpenAdFailedToLoad(LoadAdError loadAdError) {
-                        adCallback.onAdClosed();
-                    }
-
-                };
-        AdRequest request = AdmodUtils.getAdRequest();
-        AppOpenAd.load(
-                context, appOpenId, request,
-                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
-    }
-
-    public static  void showAppOpenAd(Context context,AdCallback adCallback) {
-        // Only show ad if there is not already an app open ad currently showing
-        // and an ad is available.
-        if (!isAdShowing ) {
-
-            FullScreenContentCallback fullScreenContentCallback =
-                    new FullScreenContentCallback() {
-                        @Override
-                        public void onAdDismissedFullScreenContent() {
-                            // Set the reference to null so isAdAvailable() returns false.
-                            appOpenAd = null;
-                            isAdShowing = false;
-
-                            adCallback.onAdClosed();
-
-//                            fetchAd();
-                        }
-
-                        @Override
-                        public void onAdFailedToShowFullScreenContent(AdError adError) {
-
-                            adCallback.onAdClosed();
-                        }
-
-                        @Override
-                        public void onAdShowedFullScreenContent() {
-                            isAdShowing = true;
-                        }
-                    };
-
-            appOpenAd.show( (Activity) context, fullScreenContentCallback);
-
-        } else {
-            adCallback.onAdClosed();
-        }
-    }
     public static  void showAdIfAvailable(Context context,Class nextActivity) {
         // Only show ad if there is not already an app open ad currently showing
         // and an ad is available.
