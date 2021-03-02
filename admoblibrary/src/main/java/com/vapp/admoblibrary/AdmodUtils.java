@@ -50,7 +50,7 @@ public class AdmodUtils {
     public static boolean isInitializationComplete = false;
     public static long limitTime = 30000;
     public static long lastTimeShowInterstitial = 0;
-
+    public static boolean isAdShowing = false;
     public static String ads_admob_id = "";
     public static String ads_admob_open_id = "ca-app-pub-3940256099942544/3419835294";
     public static String ads_admob_inter_id = "ca-app-pub-3940256099942544/1033173712";
@@ -58,7 +58,6 @@ public class AdmodUtils {
     public static String ads_admob_native_id = "ca-app-pub-3940256099942544/2247696110";
     private static AppOpenAd appOpenAd = null;
     private static AppOpenAd.AppOpenAdLoadCallback loadCallback;
-    private static boolean isShowingAd = false;
 
     // get AdRequest
     public static AdRequest getAdRequest(){
@@ -138,11 +137,47 @@ public class AdmodUtils {
                 context, appOpenId, request,
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
     }
+    public static  void fetchAppOpenAdsWithCallback(Context context,Class nextActivity,String appOpenId,AdCallback adCallback) {
+        // Have unused ad, no need to fetch another.
+        MobileAds.initialize(context, initializationStatus -> {
+        });
 
-    public static  void showAdIfAvailable(Context context,Class nextActivity) {
+        loadCallback =
+                new AppOpenAd.AppOpenAdLoadCallback() {
+                    /**
+                     * Called when an app open ad has loaded.
+                     *
+                     * @param ad the loaded app open ad.
+                     */
+                    @Override
+                    public void onAppOpenAdLoaded(AppOpenAd ad) {
+                        appOpenAd = ad;
+                        showAppOpenAd(context,adCallback);
+                    }
+
+                    /**
+                     * Called when an app open ad has failed to load.
+                     *
+                     * @param loadAdError the error.
+                     */
+                    @Override
+                    public void onAppOpenAdFailedToLoad(LoadAdError loadAdError) {
+                        Intent i =  new Intent(context,nextActivity);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
+                    }
+
+                };
+        AdRequest request = AdmodUtils.getAdRequest();
+        AppOpenAd.load(
+                context, appOpenId, request,
+                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
+    }
+
+    public static  void showAppOpenAd(Context context,AdCallback adCallback) {
         // Only show ad if there is not already an app open ad currently showing
         // and an ad is available.
-        if (!isShowingAd ) {
+        if (!isAdShowing ) {
 
             FullScreenContentCallback fullScreenContentCallback =
                     new FullScreenContentCallback() {
@@ -150,7 +185,43 @@ public class AdmodUtils {
                         public void onAdDismissedFullScreenContent() {
                             // Set the reference to null so isAdAvailable() returns false.
                             appOpenAd = null;
-                            isShowingAd = false;
+                            isAdShowing = false;
+
+                            adCallback.onAdClosed();
+
+//                            fetchAd();
+                        }
+
+                        @Override
+                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+
+                            adCallback.onAdClosed();
+                        }
+
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                            isAdShowing = true;
+                        }
+                    };
+
+            appOpenAd.show( (Activity) context, fullScreenContentCallback);
+
+        } else {
+            adCallback.onAdClosed();
+        }
+    }
+    public static  void showAdIfAvailable(Context context,Class nextActivity) {
+        // Only show ad if there is not already an app open ad currently showing
+        // and an ad is available.
+        if (!isAdShowing ) {
+
+            FullScreenContentCallback fullScreenContentCallback =
+                    new FullScreenContentCallback() {
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            // Set the reference to null so isAdAvailable() returns false.
+                            appOpenAd = null;
+                            isAdShowing = false;
 
                             Intent i =  new Intent(context,nextActivity);
                             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -168,7 +239,7 @@ public class AdmodUtils {
 
                         @Override
                         public void onAdShowedFullScreenContent() {
-                            isShowingAd = true;
+                            isAdShowing = true;
                         }
                     };
 
@@ -427,6 +498,7 @@ public class AdmodUtils {
             public void onAdLoaded() {
                 lastTimeShowInterstitial = currentTime;
                     mInterstitialAd.show();
+                isAdShowing = true;
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -453,6 +525,7 @@ public class AdmodUtils {
                 if (dialog != null) {
                     dialog.dismiss();
                 }
+                isAdShowing = false;
             }
 
             @Override
@@ -466,6 +539,7 @@ public class AdmodUtils {
                 if (dialog != null) {
                     dialog.dismiss();
                 }
+                isAdShowing = false;
             }
         });
         Log.e(" Admod", "showAdInterstitial");
@@ -499,6 +573,7 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+                    isAdShowing = true;
                 }
 
                 @Override
@@ -522,6 +597,7 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+                    isAdShowing = false;
                 }
 
                 @Override
@@ -535,6 +611,7 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+                    isAdShowing = false;
                 }
             });
             Log.e(" Admod", "showAdInterstitial");
@@ -562,6 +639,7 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+                    isAdShowing = true;
                 }
 
                 @Override
@@ -585,6 +663,7 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+                    isAdShowing = false;
                 }
 
                 @Override
@@ -598,6 +677,7 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+                    isAdShowing = false;
                 }
             });
             Log.e(" Admod", "showAdInterstitial");
@@ -776,6 +856,7 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+                    isAdShowing = true;
                 }
 
                 @Override
@@ -799,6 +880,7 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+                    isAdShowing = false;
                 }
 
                 @Override
@@ -812,6 +894,7 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+                    isAdShowing = false;
                 }
             });
             Log.e(" Admod", "showAdInterstitial");
