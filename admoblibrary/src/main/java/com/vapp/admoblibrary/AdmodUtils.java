@@ -46,12 +46,13 @@ import java.security.NoSuchAlgorithmException;
 
 public class AdmodUtils {
     static ProgressDialog dialog;
-    public static boolean isTesting = true;
+    public static boolean isShow = true;
     public static boolean isInitializationComplete = false;
     public static long limitTime = 30000;
     public static long lastTimeShowInterstitial = 0;
     public static boolean isAdShowing = false;
     public static String ads_admob_id = "";
+
     public static String ads_admob_open_id = "ca-app-pub-3940256099942544/3419835294";
     public static String ads_admob_inter_id = "ca-app-pub-3940256099942544/1033173712";
     public static String ads_admob_banner_id = "ca-app-pub-3940256099942544/6300978111";
@@ -248,6 +249,7 @@ public class AdmodUtils {
                 .build();
         adLoader.loadAd(getAdRequest());
         Log.e(" Admod", "loadAdNativeAds");
+        isAdShowing = true;
     }
 
     public static void showAdNativeAds(final Context context,  String s){

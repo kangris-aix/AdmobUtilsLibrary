@@ -1,34 +1,41 @@
 package com.vapp.admoblibrary;
+
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
+
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.appopen.AppOpenAd;
-import java.util.Date;
 
 import static androidx.lifecycle.Lifecycle.Event.ON_START;
-import static com.vapp.admoblibrary.AdmodUtils.isAdShowing;
 
 public class AppOpenManager implements Application.ActivityLifecycleCallbacks,LifecycleObserver {
   private static final String LOG_TAG = "AppOpenManager";
   private AppOpenAd appOpenAd = null;
   private Activity currentActivity;
   private AppOpenAd.AppOpenAdLoadCallback loadCallback;
-  private final Application myApplication;
+  private static Application myApplication = null;
   private boolean isShowingAd;
   private String adUnitId = "";
+  private Boolean showAppOpenAd = true;
+
+  public Boolean getShowAppOpenAd() {
+    return showAppOpenAd;
+  }
+
+  public void setShowAppOpenAd(Boolean showAppOpenAd) {
+    this.showAppOpenAd = showAppOpenAd;
+  }
 
   public String getAdUnitId() {
     return adUnitId;
@@ -38,80 +45,15 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks,Li
     this.adUnitId = adUnitId;
   }
 
+
   /** Constructor */
-  public AppOpenManager(Application myApplication,String adUnitId) {
-    this.myApplication = myApplication;
+  public AppOpenManager(Application application, String adUnitId) {
+    this.myApplication = application;
     this.myApplication.registerActivityLifecycleCallbacks(this);
     ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
     this.adUnitId = adUnitId;
   }
 
-  public void fetchAppOpenAdsWithCallback(Context context,String appOpenId,AdCallback adCallback) {
-    // Have unused ad, no need to fetch another.
-    MobileAds.initialize(context, initializationStatus -> {
-    });
-
-    loadCallback =
-            new AppOpenAd.AppOpenAdLoadCallback() {
-              /**
-               * Called when an app open ad has loaded.
-               *
-               * @param ad the loaded app open ad.
-               */
-              @Override
-              public void onAppOpenAdLoaded(AppOpenAd ad) {
-                appOpenAd = ad;
-                showAppOpenAd(context,adCallback);
-              }
-
-              /**
-               * Called when an app open ad has failed to load.
-               *
-               * @param loadAdError the error.
-               */
-              @Override
-              public void onAppOpenAdFailedToLoad(LoadAdError loadAdError) {
-                adCallback.onAdClosed();
-              }
-
-            };
-    AdRequest request = AdmodUtils.getAdRequest();
-    AppOpenAd.load(
-            context, appOpenId, request,
-            AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
-  }
-
-  public void showAppOpenAd(Context context,AdCallback adCallback) {
-    // Only show ad if there is not already an app open ad currently showing
-    // and an ad is available.
-    if (!isAdShowing ) {
-
-      FullScreenContentCallback fullScreenContentCallback =
-              new FullScreenContentCallback() {
-                @Override
-                public void onAdDismissedFullScreenContent() {
-                  // Set the reference to null so isAdAvailable() returns false.
-                  adCallback.onAdClosed();
-                }
-
-                @Override
-                public void onAdFailedToShowFullScreenContent(AdError adError) {
-
-                  adCallback.onAdClosed();
-                }
-
-                @Override
-                public void onAdShowedFullScreenContent() {
-                  isAdShowing = true;
-                }
-              };
-
-      appOpenAd.show( (Activity) context, fullScreenContentCallback);
-
-    } else {
-      adCallback.onAdClosed();
-    }
-  }
   public void fetchAd() {
     // Have unused ad, no need to fetch another.
     if (isAdAvailable()) {
@@ -227,7 +169,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks,Li
   /** LifecycleObserver methods */
   @OnLifecycleEvent(ON_START)
   public void onRestart() {
-    showAdIfAvailable();
-    Log.d(LOG_TAG, "onStart");
+    if(!AdmodUtils.isAdShowing){
+      showAdIfAvailable();
+      Log.d(LOG_TAG, "onStart");
+    }
   }
 }

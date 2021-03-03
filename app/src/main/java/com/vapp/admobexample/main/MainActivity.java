@@ -7,6 +7,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.vapp.admobexample.R;
 import com.vapp.admobexample.SplashActivity;
 import com.vapp.admoblibrary.AdmodUtils;
+import com.vapp.admoblibrary.AppOpenManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,5 +31,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }
