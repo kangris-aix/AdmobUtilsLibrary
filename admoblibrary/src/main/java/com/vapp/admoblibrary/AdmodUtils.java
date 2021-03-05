@@ -293,6 +293,7 @@ public class AdmodUtils {
    @SuppressLint("StaticFieldLeak")
    public static AdLoader adLoader;
     public static void loadAdNativeAds(final Context context, String s, final TemplateView templateView){
+        templateView.setVisibility(View.VISIBLE);
         adLoader = new AdLoader.Builder(context, s)
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
@@ -307,7 +308,7 @@ public class AdmodUtils {
                 .withAdListener(new AdListener() {
                     @Override
                     public void onAdFailedToLoad(LoadAdError adError) {
-                        // Handle the failure by logging, altering the UI, and so on.
+                        templateView.setVisibility(View.GONE);
                     }
                 })
                 .withNativeAdOptions(new NativeAdOptions.Builder()
