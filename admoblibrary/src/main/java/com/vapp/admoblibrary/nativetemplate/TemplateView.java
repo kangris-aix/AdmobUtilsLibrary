@@ -276,7 +276,7 @@ public class TemplateView extends FrameLayout {
     try {
       templateType =
           attributes.getResourceId(
-              R.styleable.TemplateView_gnt_template_type, R.layout.gnt_medium_template_view);
+              R.styleable.TemplateView_gnt_template_type, R.layout.gnt_small_template_view);
     } finally {
       attributes.recycle();
     }
