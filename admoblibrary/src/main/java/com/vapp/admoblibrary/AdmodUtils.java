@@ -271,7 +271,7 @@ public class AdmodUtils {
 //        adView.setAdUnitId(s);
 
         if(isTesting){
-            s = ads_admob_open_test_id;
+            s = ads_admob_banner_test_id;
         }
         adView.loadAd(getAdRequest());
         Log.e(" Admod", "loadAdBanner");
@@ -286,7 +286,7 @@ public class AdmodUtils {
         mAdView.loadAd(AdmodUtils.getAdRequest());
 
         if(isTesting){
-            bannerId = ads_admob_open_test_id;
+            bannerId = ads_admob_banner_test_id;
         }
         Log.e(" Admod", "loadAdBanner");
     }
@@ -313,7 +313,7 @@ public class AdmodUtils {
         templateView.setVisibility(View.VISIBLE);
 
         if(isTesting){
-            s = ads_admob_open_test_id;
+            s = ads_admob_native_test_id;
         }
         adLoader = new AdLoader.Builder(context, s)
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
