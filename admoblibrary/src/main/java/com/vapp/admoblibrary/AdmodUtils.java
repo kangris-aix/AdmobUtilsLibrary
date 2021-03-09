@@ -52,11 +52,15 @@ public class AdmodUtils {
     public static long lastTimeShowInterstitial = 0;
     public static boolean isAdShowing = false;
     public static String ads_admob_id = "";
-
+    public static boolean isTesting = false;
     public static String ads_admob_open_id = "";
     public static String ads_admob_inter_id = "ca-app-pub-3940256099942544/1033173712";
     public static String ads_admob_banner_id = "ca-app-pub-3940256099942544/6300978111";
     public static String ads_admob_native_id = "ca-app-pub-3940256099942544/2247696110";
+    public static String ads_admob_inter_test_id = "ca-app-pub-3940256099942544/1033173712";
+    public static String ads_admob_banner_test_id = "ca-app-pub-3940256099942544/6300978111";
+    public static String ads_admob_native_test_id = "ca-app-pub-3940256099942544/2247696110";
+    public static String ads_admob_open_test_id = "ca-app-pub-3940256099942544/3419835294";
     private static AppOpenAd appOpenAd = null;
     private static AppOpenAd.AppOpenAdLoadCallback loadCallback;
 
@@ -106,7 +110,9 @@ public class AdmodUtils {
         // Have unused ad, no need to fetch another.
         MobileAds.initialize(context, initializationStatus -> {
         });
-
+        if(isTesting){
+            appOpenId = ads_admob_open_test_id;
+        }
         loadCallback =
                 new AppOpenAd.AppOpenAdLoadCallback() {
                     /**
@@ -150,6 +156,9 @@ public class AdmodUtils {
             return;
         }
 
+        if(isTesting){
+            ads_admob_open_id = ads_admob_open_test_id;
+        }
         loadCallback =
                 new AppOpenAd.AppOpenAdLoadCallback() {
                     /**
@@ -260,6 +269,10 @@ public class AdmodUtils {
 //            adView.setAdUnitId(s);
 //        }
 //        adView.setAdUnitId(s);
+
+        if(isTesting){
+            s = ads_admob_open_test_id;
+        }
         adView.loadAd(getAdRequest());
         Log.e(" Admod", "loadAdBanner");
     }
@@ -271,6 +284,10 @@ public class AdmodUtils {
         viewGroup.removeAllViews();
         viewGroup.addView(mAdView);
         mAdView.loadAd(AdmodUtils.getAdRequest());
+
+        if(isTesting){
+            bannerId = ads_admob_open_test_id;
+        }
         Log.e(" Admod", "loadAdBanner");
     }
 
@@ -294,6 +311,10 @@ public class AdmodUtils {
    public static AdLoader adLoader;
     public static void loadAdNativeAds(final Context context, String s, final TemplateView templateView){
         templateView.setVisibility(View.VISIBLE);
+
+        if(isTesting){
+            s = ads_admob_open_test_id;
+        }
         adLoader = new AdLoader.Builder(context, s)
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
@@ -478,6 +499,9 @@ public class AdmodUtils {
         if(!isInitializationComplete){
             MobileAds.initialize(context, initializationStatus -> isInitializationComplete = true);
         }
+        if(isTesting){
+            admobId = ads_admob_inter_test_id;
+        }
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {
             dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
@@ -553,6 +577,9 @@ public class AdmodUtils {
         if(!isInitializationComplete){
             MobileAds.initialize(context, initializationStatus -> isInitializationComplete = true);
         }
+        if(isTesting){
+            admobId = ads_admob_inter_test_id;
+        }
             dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setTitle("Loading");
@@ -617,6 +644,10 @@ public class AdmodUtils {
 
     }
     public static void loadAndShowAdInterstitialWithCallbackNotCheckTime(Context context, String admobId,boolean isShow, AdCallback adCallback, boolean enableLoadingDialog){
+
+        if(isTesting){
+            admobId = ads_admob_inter_test_id;
+        }
             if(enableLoadingDialog){
                 dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
                 dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -831,6 +862,10 @@ public class AdmodUtils {
         Log.e(" Admod", "showAdInterstitial");
     }
     public static void loadAndShowAdInterstitialWithCallback(Context context, String admobId,boolean isShow, AdCallback adCallback, boolean enableLoadingDialog){
+
+        if(isTesting){
+            admobId = ads_admob_inter_test_id;
+        }
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime && isShow && isNetworkConnected(context)) {
             if(enableLoadingDialog){
