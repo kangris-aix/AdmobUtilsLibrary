@@ -221,7 +221,6 @@ public class AdmodUtils {
     public static  void showAdIfAvailable(Context context,Class nextActivity) {
         // Only show ad if there is not already an app open ad currently showing
         // and an ad is available.
-        if (!isAdShowing ) {
 
             FullScreenContentCallback fullScreenContentCallback =
                     new FullScreenContentCallback() {
@@ -250,12 +249,6 @@ public class AdmodUtils {
                     };
 
             appOpenAd.show( (Activity) context, fullScreenContentCallback);
-
-        } else {
-            Intent i =  new Intent(context,nextActivity);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
-        }
     }
 
 
