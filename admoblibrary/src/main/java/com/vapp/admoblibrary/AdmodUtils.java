@@ -61,7 +61,7 @@ public class AdmodUtils {
     public static String ads_admob_banner_test_id = "ca-app-pub-3940256099942544/6300978111";
     public static String ads_admob_native_test_id = "ca-app-pub-3940256099942544/2247696110";
     public static String ads_admob_open_test_id = "ca-app-pub-3940256099942544/3419835294";
-    public static String ads_admob_rewarded_test_id = "ca-app-pub-3940256099942544/5354046379";
+    public static String ads_admob_rewarded_test_id = "ca-app-pub-3940256099942544/5224354917";
     private static AppOpenAd appOpenAd = null;
     private static AppOpenAd.AppOpenAdLoadCallback loadCallback;
 
