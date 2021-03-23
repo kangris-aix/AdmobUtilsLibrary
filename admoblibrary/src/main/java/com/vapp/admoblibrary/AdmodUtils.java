@@ -359,7 +359,7 @@ public class AdmodUtils {
     static boolean isReward = false;
     static RewardedAd rewardedAd;
 
-    public static void loadAndShowAdRewardAndStartNewActivity(Activity activity, Class destActivity, String id){
+    public static void loadAndShowAdReward(Activity activity, Class destActivity, String id){
         rewardedAd = new RewardedAd(activity, id);
         isReward = false;
         dialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
@@ -384,9 +384,7 @@ public class AdmodUtils {
 
                     @Override
                     public void onRewardedAdClosed() {
-                        if (isReward){
-                            addNewActivity(activity,destActivity);
-                        }
+
                     }
 
                     @Override
