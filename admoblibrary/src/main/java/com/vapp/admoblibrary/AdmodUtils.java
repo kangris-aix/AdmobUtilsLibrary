@@ -64,7 +64,7 @@ public class AdmodUtils {
     public static String ads_admob_rewarded_test_id = "ca-app-pub-3940256099942544/5224354917";
     private static AppOpenAd appOpenAd = null;
     private static AppOpenAd.AppOpenAdLoadCallback loadCallback;
-
+    private static int numberOfAdsShowed = 0;
     // get AdRequest
     public static AdRequest getAdRequest(){
         AdRequest adRequest =  new AdRequest.Builder()
@@ -782,6 +782,81 @@ public class AdmodUtils {
                 }
             });
             Log.e(" Admod", "showAdInterstitial");
+    }
+
+    public static void loadAndShowAdInterstitialWithCallbackAlternate(Context context, String admobId,boolean isShow, AdCallback adCallback, boolean enableLoadingDialog){
+        numberOfAdsShowed += 1;
+        if(numberOfAdsShowed % 2 ==0){
+            adCallback.onAdClosed();
+        }
+        else{
+            if(isTesting){
+                admobId = ads_admob_inter_test_id;
+            }
+            if(enableLoadingDialog){
+                dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
+                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                dialog.setTitle("Loading");
+                dialog.setMessage("Loading ads. Please wait...");
+                dialog.setIndeterminate(true);
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+            }
+            mInterstitialAd = new InterstitialAd(context);
+            mInterstitialAd.setAdUnitId(admobId);
+            mInterstitialAd.loadAd(getAdRequest());
+            Log.e(" Admod", "loadAdInterstitial");
+
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    mInterstitialAd.show();
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    isAdShowing = true;
+                }
+
+                @Override
+                public void onAdFailedToLoad(LoadAdError adError) {
+                    Log.e(" Admod", "showAdInterstitial");
+                    Log.e(" Admod", "errorCodeAds:" + adError.getMessage());
+                    Log.e(" Admod", "errorCodeAds:" + adError.getCause());
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    adCallback.onAdClosed();
+                }
+
+                @Override
+                public void onAdOpened() {
+                    // Code to be executed when the ad is displayed
+                }
+
+                @Override
+                public void onAdClicked() {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    isAdShowing = false;
+                }
+
+                @Override
+                public void onAdLeftApplication() {
+                    // Code to be executed when the user has left the app.
+                }
+
+                @Override
+                public void onAdClosed() {
+                    adCallback.onAdClosed();
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    isAdShowing = false;
+                }
+            });
+            Log.e(" Admod", "showAdInterstitial");
+        }
     }
 
 
