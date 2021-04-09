@@ -472,6 +472,71 @@ public class AdmodUtils {
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
     }
+
+    public static void loadAndShowAdRewardWithCallbackNotCheckTime(Activity activity, String admobId, AdCallback adCallback2, boolean enableLoadingDialog){
+
+        if(isTesting){
+            admobId = ads_admob_rewarded_test_id;
+        }
+
+        rewardedAd = new RewardedAd(activity, admobId);
+        isReward = false;
+
+        if(enableLoadingDialog){
+            dialog = new ProgressDialog(activity, R.style.AppCompatAlertDialogStyle);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setTitle("Loading");
+            dialog.setMessage("Loading ads. Please wait...");
+            dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                dialog.dismiss();
+
+                RewardedAdCallback adCallback = new RewardedAdCallback() {
+                    @Override
+                    public void onRewardedAdOpened() {
+                    }
+
+                    @Override
+                    public void onRewardedAdClosed() {
+                        if (isReward){
+                            adCallback2.onAdClosed();
+                            dialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onUserEarnedReward(@NonNull RewardItem reward) {
+                        isReward = true;
+
+                    }
+
+                    @Override
+                    public void onRewardedAdFailedToShow(AdError adError) {
+                        adCallback2.onAdFail();
+                        dialog.dismiss();
+
+                    }
+                };
+                rewardedAd.show(activity, adCallback);
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                adCallback2.onAdFail();
+                dialog.dismiss();
+
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+    }
+
+
     //inter ads
     public static InterstitialAd mInterstitialAd;
     public static void loadAdInterstitial(Context context, String s){
