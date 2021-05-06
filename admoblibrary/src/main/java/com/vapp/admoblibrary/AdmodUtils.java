@@ -53,6 +53,7 @@ public class AdmodUtils {
     public static boolean isAdShowing = false;
     public static String ads_admob_id = "";
     public static boolean isTesting = false;
+    public static boolean isFirstAppOpen = true;
     public static String ads_admob_open_id = "";
     public static String ads_admob_inter_id = "ca-app-pub-3940256099942544/1033173712";
     public static String ads_admob_banner_id = "ca-app-pub-3940256099942544/6300978111";
@@ -156,7 +157,12 @@ public class AdmodUtils {
         if (isAdAvailable()) {
             return;
         }
-
+        if(isFirstAppOpen){
+            isFirstAppOpen = false;
+        }
+        else{
+            ads_admob_open_id = AppOpenManager.adUnitId;
+        }
         if(isTesting){
             ads_admob_open_id = ads_admob_open_test_id;
         }

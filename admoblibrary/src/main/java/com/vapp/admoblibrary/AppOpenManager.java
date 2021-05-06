@@ -26,7 +26,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks,Li
   private AppOpenAd.AppOpenAdLoadCallback loadCallback;
   private static Application myApplication = null;
   private boolean isShowingAd;
-  private String adUnitId = "";
+  public static String adUnitId = "";
   private Boolean showAppOpenAd = true;
 
   public Boolean getShowAppOpenAd() {
