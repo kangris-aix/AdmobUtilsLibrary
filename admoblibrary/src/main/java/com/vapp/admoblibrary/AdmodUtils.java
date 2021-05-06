@@ -112,6 +112,13 @@ public class AdmodUtils {
         // Have unused ad, no need to fetch another.
         MobileAds.initialize(context, initializationStatus -> {
         });
+
+        if(isFirstAppOpen){
+            isFirstAppOpen = false;
+        }
+        else{
+            ads_admob_open_id = AppOpenManager.adUnitId;
+        }
         if(isTesting){
             appOpenId = ads_admob_open_test_id;
         }
