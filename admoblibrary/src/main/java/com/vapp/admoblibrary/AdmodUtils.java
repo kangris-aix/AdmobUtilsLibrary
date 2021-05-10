@@ -280,21 +280,21 @@ public class AdmodUtils {
         if(isTesting){
             s = ads_admob_banner_test_id;
         }
+        adView.setAdUnitId(s);
         adView.loadAd(getAdRequest());
         Log.e(" Admod", "loadAdBanner");
     }
     public static void loadAdBanner(Context context, ViewGroup viewGroup, String bannerId){
         MobileAds.initialize(context, initializationStatus -> isInitializationComplete = true);
         AdView mAdView = new AdView(context);
+        if(isTesting){
+            bannerId = ads_admob_banner_test_id;
+        }
         mAdView.setAdUnitId(bannerId);
         mAdView.setAdSize(AdSize.SMART_BANNER);
         viewGroup.removeAllViews();
         viewGroup.addView(mAdView);
         mAdView.loadAd(AdmodUtils.getAdRequest());
-
-        if(isTesting){
-            bannerId = ads_admob_banner_test_id;
-        }
         Log.e(" Admod", "loadAdBanner");
     }
 
