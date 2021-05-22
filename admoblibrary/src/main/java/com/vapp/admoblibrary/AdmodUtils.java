@@ -86,6 +86,13 @@ public class AdmodUtils {
                 .addTestDevice("5798E06F645D797640A9C4B90B6CBEA7")
                 .addTestDevice("E91FD94E971864C3880FB434D1C39A03")
                 .addTestDevice("50ACF2DAA0884FF8B08F7C823E046DEA")
+                .addTestDevice("97F07D4A6D0145F9DB7114B63D3D8E9B")
+                .addTestDevice("4C96668EC6F204034D0CDCE1B94A4E65")
+                .addTestDevice("00A52C89E14694316247D3CA3DF19F6B")
+                .addTestDevice("C38A7BF0A80E31BD6B76AF6D0C1EE4A1")
+                .addTestDevice("CE604BDCEFEE2B9125CCFFC53E96022E")
+                .addTestDevice("39D7026016640CEA1502836C6EF3776D")
+                .addTestDevice("A99C99C378EE9BDE5D3DE404D3A4A812")
                 .build();
         return adRequest;
     }
