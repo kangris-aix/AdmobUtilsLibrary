@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
   <com.google.android.gms.ads.formats.UnifiedNativeAdView
-      android:layout_height="350dp"
+      android:layout_height="400dp"
       android:layout_width="match_parent"
       android:id="@+id/native_ad_view"
       android:background="@drawable/gnt_outline_shape"
@@ -197,8 +197,6 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/middle"
-          android:layout_marginBottom="@dimen/gnt_default_margin"
-          android:visibility="gone"
           />
       <Button
           android:id="@+id/cta"
