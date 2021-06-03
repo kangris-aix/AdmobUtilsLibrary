@@ -37,6 +37,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.vapp.admoblibrary.nativetemplate.NativeTemplateStyle;
 import com.vapp.admoblibrary.nativetemplate.BigTemplateView;
+import com.vapp.admoblibrary.nativetemplate.TemplateView;
 
 import java.net.InetAddress;
 import java.security.MessageDigest;
@@ -321,8 +322,42 @@ public class AdmodUtils {
     }
 
     // ads native
+    @SuppressLint("StaticFieldLeak")
+    public static AdLoader adLoader;
+    public static void loadAdNativeAds(final Context context, String s, final TemplateView templateView){
+        templateView.setVisibility(View.VISIBLE);
+
+        if(isTesting){
+            s = ads_admob_native_test_id;
+        }
+        adLoader = new AdLoader.Builder(context, s)
+                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+
+                        NativeTemplateStyle styles = new
+                                NativeTemplateStyle.Builder().build();
+                        templateView.setStyles(styles);
+                        templateView.setNativeAd(unifiedNativeAd);
+                    }
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError adError) {
+                        templateView.setVisibility(View.GONE);
+                    }
+                })
+                .withNativeAdOptions(new NativeAdOptions.Builder()
+                        // Methods in the NativeAdOptions.Builder class can be
+                        // used here to specify individual options settings.
+                        .build())
+                .build();
+        adLoader.loadAd(getAdRequest());
+        Log.e(" Admod", "loadAdNativeAds");
+        isAdShowing = true;
+    }
+    // ads native
    @SuppressLint("StaticFieldLeak")
-   public static AdLoader adLoader;
     public static void loadAdNativeAds(final Context context, String s, final BigTemplateView bigTemplateView){
         bigTemplateView.setVisibility(View.VISIBLE);
 
