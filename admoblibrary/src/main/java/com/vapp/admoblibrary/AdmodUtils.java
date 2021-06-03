@@ -31,14 +31,12 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.appopen.AppOpenAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.vapp.admoblibrary.nativetemplate.NativeTemplateStyle;
-import com.vapp.admoblibrary.nativetemplate.TemplateView;
+import com.vapp.admoblibrary.nativetemplate.BigTemplateView;
 
 import java.net.InetAddress;
 import java.security.MessageDigest;
@@ -325,8 +323,8 @@ public class AdmodUtils {
     // ads native
    @SuppressLint("StaticFieldLeak")
    public static AdLoader adLoader;
-    public static void loadAdNativeAds(final Context context, String s, final TemplateView templateView){
-        templateView.setVisibility(View.VISIBLE);
+    public static void loadAdNativeAds(final Context context, String s, final BigTemplateView bigTemplateView){
+        bigTemplateView.setVisibility(View.VISIBLE);
 
         if(isTesting){
             s = ads_admob_native_test_id;
@@ -338,14 +336,14 @@ public class AdmodUtils {
 
                         NativeTemplateStyle styles = new
                                 NativeTemplateStyle.Builder().build();
-                        templateView.setStyles(styles);
-                        templateView.setNativeAd(unifiedNativeAd);
+                        bigTemplateView.setStyles(styles);
+                        bigTemplateView.setNativeAd(unifiedNativeAd);
                     }
                 })
                 .withAdListener(new AdListener() {
                     @Override
                     public void onAdFailedToLoad(LoadAdError adError) {
-                        templateView.setVisibility(View.GONE);
+                        bigTemplateView.setVisibility(View.GONE);
                     }
                 })
                 .withNativeAdOptions(new NativeAdOptions.Builder()
