@@ -354,7 +354,6 @@ public class AdmodUtils {
                 .build();
         adLoader.loadAd(getAdRequest());
         Log.e(" Admod", "loadAdNativeAds");
-        isAdShowing = true;
     }
     // ads native
    @SuppressLint("StaticFieldLeak")
@@ -388,7 +387,6 @@ public class AdmodUtils {
                 .build();
         adLoader.loadAd(getAdRequest());
         Log.e(" Admod", "loadAdNativeAds");
-        isAdShowing = true;
     }
 
     public static void showAdNativeAds(final Context context,  String s){
