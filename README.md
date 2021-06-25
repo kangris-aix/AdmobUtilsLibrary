@@ -1,5 +1,35 @@
 # AdmobUtilsLibrary
+- init
+```bash
+AdmodUtils.initAdmob(Context context);
+```
+- Interstitial
+  + loadAndShowAdInterstitialWithCallback
 
+```bash 
+AdmodUtils.loadAndShowAdInterstitialWithCallback(context, admobId, limitTime, 
+      new AdCallback() {
+                    @Override
+                    public void onAdClosed() {
+                      //code here
+                    }
+
+                    @Override
+                    public void onAdFail() {
+                      //code here
+                    }
+                }, isEnableDialog);
+
+// admobId:String
+// limitTime:Int (milisecond)
+// isEnableDialog:Bool 
+```
+  + loadAdInterstitial
+  + showAdInterstitialWithCallback
+- AdBanner
+- AdReward
+- AdNative
+- AppOpenAds
 # PurchaseUtils
 - init
 ```bash
