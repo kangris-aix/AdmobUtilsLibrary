@@ -1,7 +1,10 @@
 # AdmobUtilsLibrary
 - init
 ```bash
-AdmodUtils.initAdmob(Context context);
+AdmodUtils.initAdmob(Context context, boolean isDebug, boolean isAddDeviceTest);
+
+// isDebug:bool = use admob id test
+// isAddDeviceTest:bool = get and add device test this device
 ```
 - Interstitial
   + loadAndShowAdInterstitialWithCallback
